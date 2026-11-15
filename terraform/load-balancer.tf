@@ -8,11 +8,11 @@ resource "aws_lb_target_group" "app" {
   health_check {
     enabled             = true
     path                = local.health_check_path
-    matcher             = "200"
-    healthy_threshold   = 2
-    unhealthy_threshold = 3
-    interval            = 30
-    timeout             = 5
+    matcher             = local.health_check_matcher
+    healthy_threshold   = local.healthy_threshold
+    unhealthy_threshold = local.unhealthy_threshold
+    interval            = local.health_check_interval
+    timeout             = local.health_check_timeout
   }
 
   tags = merge(local.tags, {

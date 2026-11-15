@@ -48,11 +48,29 @@ As variaveis opcionais recebem `null` e seus valores padrao sao definidos nos `l
 | `log_retention_days` | `7` |
 | `listener_rule_priority` | `100` |
 | `health_check_path` | `/` |
+| `health_check_matcher` | `"200"` |
+| `healthy_threshold` / `unhealthy_threshold` | `2` / `3` |
+| `health_check_interval` / `health_check_timeout` | `30` / `5` segundos |
 | `enable_efs` | `false` |
 | `efs_backup_policy` | `DISABLED` |
 | `efs_container_path` | `/app/data` |
 | `tags` | `{}` |
 
 `port` e `region` sao obrigatorios. Tambem sao obrigatorios os identificadores de integracao com a infraestrutura existente: `alb_dns_name`, `alb_listener_arn`, `alb_security_group_id`, `vpc_id`, `subnet_ids` e `ecs_cluster_arn`. O provider AWS e configurado pelo projeto consumidor na mesma regiao informada em `region`.
+
+Os parametros do health check podem ser sobrescritos individualmente. Por exemplo:
+
+```hcl
+module "app" {
+  # Demais parametros do modulo...
+
+  health_check_path      = "/healthz"
+  health_check_matcher   = "200-299"
+  healthy_threshold      = 3
+  unhealthy_threshold    = 2
+  health_check_interval  = 15
+  health_check_timeout   = 5
+}
+```
 
 Quando `enable_efs = true`, o modulo cria EFS, access point e mount target na primeira subnet em ordem alfabetica, e monta o volume em `efs_container_path`. A prioridade da listener rule deve ser unica no listener compartilhado.

@@ -88,6 +88,41 @@ variable "health_check_path" {
   nullable    = true
 }
 
+variable "health_check_matcher" {
+  description = "HTTP status codes accepted by the target group health check."
+  type        = string
+  default     = null
+  nullable    = true
+}
+
+variable "healthy_threshold" {
+  description = "Consecutive successful health checks required to mark a target healthy."
+  type        = number
+  default     = null
+  nullable    = true
+}
+
+variable "unhealthy_threshold" {
+  description = "Consecutive failed health checks required to mark a target unhealthy."
+  type        = number
+  default     = null
+  nullable    = true
+}
+
+variable "health_check_interval" {
+  description = "Approximate time in seconds between health checks."
+  type        = number
+  default     = null
+  nullable    = true
+}
+
+variable "health_check_timeout" {
+  description = "Health check timeout in seconds."
+  type        = number
+  default     = null
+  nullable    = true
+}
+
 variable "enable_efs" {
   description = "Whether to create and mount an encrypted EFS file system."
   type        = bool
@@ -163,6 +198,11 @@ locals {
   log_retention_days     = var.log_retention_days == null ? 7 : var.log_retention_days
   listener_rule_priority = var.listener_rule_priority == null ? 100 : var.listener_rule_priority
   health_check_path      = var.health_check_path == null ? "/" : var.health_check_path
+  health_check_matcher   = var.health_check_matcher == null ? "200" : var.health_check_matcher
+  healthy_threshold      = var.healthy_threshold == null ? 2 : var.healthy_threshold
+  unhealthy_threshold    = var.unhealthy_threshold == null ? 3 : var.unhealthy_threshold
+  health_check_interval  = var.health_check_interval == null ? 30 : var.health_check_interval
+  health_check_timeout   = var.health_check_timeout == null ? 5 : var.health_check_timeout
   enable_efs             = var.enable_efs == null ? false : var.enable_efs
   efs_backup_policy      = var.efs_backup_policy == null ? "DISABLED" : upper(var.efs_backup_policy)
   efs_container_path     = var.efs_container_path == null ? "/app/data" : var.efs_container_path
